@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Image, Input, Typography, Button, Steps, message } from "antd";
+import { Image, Input, Typography, Button, Steps, message, Select } from "antd";
 import { HeaderComponent } from "../../components/HeaderComponent";
 import { useS3Upload } from "next-s3-upload";
 import { addCup, updateCup } from "../../api/cup";
+const { Option } = Select;
 
 const { Text } = Typography;
 const { Step } = Steps;
@@ -19,9 +20,29 @@ const steps = [
   },
 ];
 
+const categories = [
+  {
+    title: "남자",
+    key: "man",
+  },
+  {
+    title: "여자",
+    key: "girl",
+  },
+  {
+    title: "드라마",
+    key: "drama",
+  },
+  {
+    title: "그외",
+    key: "etc",
+  },
+];
+
 const Create = () => {
   const [cupId, setCupId] = useState("");
   const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("girl");
   const [description, setDescription] = useState("");
   const [urls, setUrls] = useState([]);
   const [current, setCurrent] = useState(0);
@@ -45,15 +66,27 @@ const Create = () => {
   };
 
   const next = async () => {
-    if (cupId) {
-      const data = await updateCup({
-        _id: cupId,
-        title,
-        description,
-      });
-    } else {
-      const data = await addCup({ title, description });
-      setCupId(data._id);
+    if (current === 0) {
+      if (!title) {
+        return message.error("제목을 입력해주세요");
+      }
+      if (!description) {
+        return message.error("설명을 입력해주세요");
+      }
+      if (!category) {
+        return message.error("카테고리를 선택해주세요");
+      }
+      if (cupId) {
+        await updateCup({
+          _id: cupId,
+          title,
+          description,
+          category,
+        });
+      } else {
+        const data = await addCup({ title, description, category });
+        setCupId(data._id);
+      }
     }
     setCurrent(current + 1);
   };
@@ -95,6 +128,27 @@ const Create = () => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
+              <div className="mt-1">
+                <Text type="secondary">
+                  월드컵에 대한 설명을 자유롭게 입력해주세요.
+                </Text>
+              </div>
+              <div style={{ margin: "20px 0" }}></div>
+              <div className="mb-1 text-xl">카테고리</div>
+              <Select
+                className="w-full"
+                size="large"
+                defaultValue="girl"
+                value={category}
+                onChange={(value) => setCategory(value)}
+              >
+                {categories.map((item) => (
+                  <Option key={item.key} value={item.key}>
+                    {item.title}
+                  </Option>
+                ))}
+              </Select>
+
               <div className="mt-1">
                 <Text type="secondary">
                   월드컵의 설명을 자유롭게 입력해주세요.
