@@ -3,7 +3,7 @@ import shortId from "shortid";
 
 export default APIRoute.configure({
   key(req, filename) {
-    let id = req.body.id; // 123
+    let id = req.body.id;
     return `${id}/${shortId.generate()}`;
   },
 });

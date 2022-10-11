@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { Image, Input, Typography, Button, Steps, message, Select } from "antd";
+import {
+  Image,
+  Input,
+  Typography,
+  Button,
+  Steps,
+  message,
+  Select,
+  List,
+} from "antd";
 import { HeaderComponent } from "../../components/HeaderComponent";
 import { useS3Upload } from "next-s3-upload";
 import { addCup, updateCup } from "../../api/cup";
@@ -61,7 +70,12 @@ const Create = () => {
           },
         },
       });
-      setUrls((current) => [...current, url]);
+      const param = {
+        name: file.name.trim().replace(/(.png|.jpg|.jpeg|.gif)$/, ""),
+        url,
+      };
+      console.log(param);
+      setUrls((current) => [...current, param]);
     }
   };
 
@@ -93,6 +107,13 @@ const Create = () => {
 
   const prev = () => {
     setCurrent(current - 1);
+  };
+
+  const doRemove = (value) => {
+    const filterUrls = urls.filter((item) => {
+      return item.url !== value;
+    });
+    setUrls(filterUrls);
   };
 
   return (
@@ -165,9 +186,35 @@ const Create = () => {
                 name="file"
                 multiple={true}
                 onChange={handleFilesChange}
+                className="mb-4"
               />
 
-              <div>
+              <List
+                size="large"
+                header={<div>이미지를 첨부하세요</div>}
+                bordered
+                dataSource={urls}
+                renderItem={(item, index) => (
+                  <List.Item style={{ padding: "4px 24px" }}>
+                    <Image
+                      alt={index}
+                      key={index}
+                      width={90}
+                      height={90}
+                      src={item.url}
+                    />
+                    <Input className="pl-2" value={item.name} />
+                    <Button
+                      className="ml-2"
+                      danger
+                      onClick={() => doRemove(item.url)}
+                    >
+                      삭제
+                    </Button>
+                  </List.Item>
+                )}
+              />
+              {/* <div>
                 {urls.map((url, index) => (
                   <Image
                     style={{ width: 200, height: 200 }}
@@ -177,7 +224,7 @@ const Create = () => {
                     src={url}
                   />
                 ))}
-              </div>
+              </div> */}
             </div>
           ) : (
             ""
