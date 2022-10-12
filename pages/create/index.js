@@ -8,10 +8,19 @@ import {
   message,
   Select,
   List,
+  Radio,
+  Card,
+  Col,
+  Row,
+  Space,
 } from "antd";
+import { SignalFilled, PlayCircleFilled } from "@ant-design/icons";
+const { Meta } = Card;
 import { HeaderComponent } from "../../components/HeaderComponent";
 import { useS3Upload } from "next-s3-upload";
-import { addCup, updateCup } from "../../api/cup";
+import { addCup, patchCup, patchCupImage, patchCupStatus } from "../../api/cup";
+import { useRouter } from "next/router";
+
 const { Option } = Select;
 
 const { Text } = Typography;
@@ -29,7 +38,18 @@ const steps = [
   },
 ];
 
-const categories = [
+const CUP_STATUS = [
+  {
+    key: "active",
+    title: "공개",
+  },
+  {
+    key: "wait",
+    title: "비공개",
+  },
+];
+
+const CATEGORIES = [
   {
     title: "남자",
     key: "man",
@@ -49,11 +69,27 @@ const categories = [
 ];
 
 const Create = () => {
+  const router = useRouter();
   const [cupId, setCupId] = useState("");
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("girl");
   const [description, setDescription] = useState("");
-  const [urls, setUrls] = useState([]);
+  const [status, setStatus] = useState("active");
+  // const [urls, setUrls] = useState([]);
+  const [urls, setUrls] = useState([
+    {
+      name: "이름1",
+      url: "https://realcup.s3.ap-northeast-2.amazonaws.com/63459e73df7b298e543b5ee7/SF_mSL60Y",
+    },
+    {
+      name: "이름2",
+      url: "https://realcup.s3.ap-northeast-2.amazonaws.com/63459e73df7b298e543b5ee7/Kz1TTSNDV",
+    },
+    {
+      name: "이름3",
+      url: "https://realcup.s3.ap-northeast-2.amazonaws.com/63459e73df7b298e543b5ee7/bpnCPkBhKu",
+    },
+  ]);
   const [current, setCurrent] = useState(0);
   const { uploadToS3 } = useS3Upload();
 
@@ -74,7 +110,6 @@ const Create = () => {
         name: file.name.trim().replace(/(.png|.jpg|.jpeg|.gif)$/, ""),
         url,
       };
-      console.log(param);
       setUrls((current) => [...current, param]);
     }
   };
@@ -91,7 +126,7 @@ const Create = () => {
         return message.error("카테고리를 선택해주세요");
       }
       if (cupId) {
-        await updateCup({
+        await patchCup({
           _id: cupId,
           title,
           description,
@@ -101,6 +136,12 @@ const Create = () => {
         const data = await addCup({ title, description, category });
         setCupId(data._id);
       }
+    } else if (current === 1) {
+      const params = {
+        _id: cupId,
+        images: urls,
+      };
+      await patchCupImage(params);
     }
     setCurrent(current + 1);
   };
@@ -109,11 +150,36 @@ const Create = () => {
     setCurrent(current - 1);
   };
 
+  const done = async () => {
+    const params = {
+      _id: cupId,
+      status,
+    };
+    try {
+      const data = await patchCupStatus(params);
+      console.log(data);
+      if (data._id && status === "active") {
+        message.success("월드컵 생성이 완료되었습니다.");
+      } else {
+        message.warn("월드컵이 비공개 처리 되었습니다.");
+      }
+      router.push("/");
+    } catch (e) {
+      message.error("월드컵 생성 중 오류가 발생하였습니다.");
+    }
+  };
+
   const doRemove = (value) => {
     const filterUrls = urls.filter((item) => {
       return item.url !== value;
     });
     setUrls(filterUrls);
+  };
+
+  const doNameChange = (e, index) => {
+    const newArr = [...urls];
+    newArr[index].name = e.target.value;
+    setUrls(newArr);
   };
 
   return (
@@ -163,7 +229,7 @@ const Create = () => {
                 value={category}
                 onChange={(value) => setCategory(value)}
               >
-                {categories.map((item) => (
+                {CATEGORIES.map((item) => (
                   <Option key={item.key} value={item.key}>
                     {item.title}
                   </Option>
@@ -188,7 +254,6 @@ const Create = () => {
                 onChange={handleFilesChange}
                 className="mb-4"
               />
-
               <List
                 size="large"
                 header={<div>이미지를 첨부하세요</div>}
@@ -197,13 +262,16 @@ const Create = () => {
                 renderItem={(item, index) => (
                   <List.Item style={{ padding: "4px 24px" }}>
                     <Image
+                      style={{ width: 90, height: 90 }}
                       alt={index}
                       key={index}
-                      width={90}
-                      height={90}
                       src={item.url}
                     />
-                    <Input className="pl-2" value={item.name} />
+                    <Input
+                      className="ml-2"
+                      value={item.name}
+                      onChange={(e) => doNameChange(e, index)}
+                    />
                     <Button
                       className="ml-2"
                       danger
@@ -214,22 +282,83 @@ const Create = () => {
                   </List.Item>
                 )}
               />
-              {/* <div>
-                {urls.map((url, index) => (
-                  <Image
-                    style={{ width: 200, height: 200 }}
-                    alt={index}
-                    key={index}
-                    width={200}
-                    src={url}
-                  />
-                ))}
-              </div> */}
+              <div className="float-right mt-1">
+                <Text type="secondary">
+                  ⚠️ 불법적인 이미지를 올릴 경우에는 경고없이 삭제될 수
+                  있습니다.
+                </Text>
+              </div>
+              <div className="clear-right"></div>
+            </div>
+          ) : (
+            ""
+          )}
+          {current === 2 ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Card
+                style={{
+                  width: 300,
+                }}
+                cover={
+                  <Row justify="center">
+                    <Col span={12}>
+                      <div
+                        className="card-cup-image"
+                        style={{
+                          backgroundImage: `url("${urls[0].url}")`,
+                        }}
+                      ></div>
+                    </Col>
+                    <Col span={12}>
+                      <div
+                        className="card-cup-image"
+                        style={{
+                          backgroundImage: `url("${urls[1].url}")`,
+                        }}
+                      ></div>
+                    </Col>
+                  </Row>
+                }
+                actions={[
+                  <div>
+                    <Text className="mr-2">통계</Text>
+                    <SignalFilled key="report" />
+                  </div>,
+                  <div>
+                    <Text className="mr-2 text-blue-500">시작</Text>
+                    <PlayCircleFilled key="play" className="text-blue-500" />
+                  </div>,
+                ]}
+              >
+                <Meta title={title} description={description} />
+              </Card>
+              <div className="ml-4">
+                <Typography.Title level={2}>공개여부</Typography.Title>
+
+                <Radio.Group
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                >
+                  <Space direction="vertical">
+                    {CUP_STATUS.map((item) => (
+                      <Radio key={item.key} value={item.key}>
+                        {item.title}
+                      </Radio>
+                    ))}
+                  </Space>
+                </Radio.Group>
+              </div>
             </div>
           ) : (
             ""
           )}
         </div>
+
         <div className="steps-action">
           {current > 0 && (
             <Button
@@ -247,10 +376,7 @@ const Create = () => {
             </Button>
           )}
           {current === steps.length - 1 && (
-            <Button
-              type="primary"
-              onClick={() => message.success("Processing complete!")}
-            >
+            <Button type="primary" onClick={() => done()}>
               Done
             </Button>
           )}

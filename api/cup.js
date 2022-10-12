@@ -18,9 +18,27 @@ export const addCup = async (params) => {
   }
 };
 
-export const updateCup = async (params) => {
+export const patchCup = async (params) => {
   try {
-    const { data } = await axios.post(`/cup/${params._id}`, params);
+    const { data } = await axios.patch(`/cup/${params._id}`, params);
+    return data;
+  } catch (e) {
+    throw e.response.data;
+  }
+};
+
+export const patchCupStatus = async (params) => {
+  try {
+    const { data } = await axios.patch(`/cup/${params._id}/status`, params);
+    return data;
+  } catch (e) {
+    throw e.response.data;
+  }
+};
+
+export const patchCupImage = async (params) => {
+  try {
+    const { data } = await axios.patch(`/cup/${params._id}/images`, params);
     return data;
   } catch (e) {
     throw e.response.data;

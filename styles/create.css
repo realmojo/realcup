@@ -19,3 +19,10 @@
   margin-top: 24px;
   float: right;
 }
+
+.card-cup-image {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 230px;
+}
