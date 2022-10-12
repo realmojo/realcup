@@ -10,19 +10,18 @@ import {
   List,
   Radio,
   Card,
-  Col,
-  Row,
   Space,
+  Row,
+  Col,
 } from "antd";
-import { SignalFilled, PlayCircleFilled } from "@ant-design/icons";
-const { Meta } = Card;
 import { HeaderComponent } from "../../components/HeaderComponent";
 import { useS3Upload } from "next-s3-upload";
 import { addCup, patchCup, patchCupImage, patchCupStatus } from "../../api/cup";
 import { useRouter } from "next/router";
+import { CupComponent } from "../../components/CupComponent";
 
 const { Option } = Select;
-
+const { Meta } = Card;
 const { Text } = Typography;
 const { Step } = Steps;
 
@@ -49,7 +48,7 @@ const CUP_STATUS = [
   },
 ];
 
-const CATEGORIES = [
+const MAIN_CATEGORIES = [
   {
     title: "남자",
     key: "man",
@@ -59,37 +58,87 @@ const CATEGORIES = [
     key: "girl",
   },
   {
-    title: "드라마",
-    key: "drama",
-  },
-  {
     title: "그외",
     key: "etc",
   },
 ];
 
+const SUB_CATEGORIES = {
+  man: [
+    {
+      title: "배우",
+      key: "actor",
+    },
+    {
+      title: "아이돌",
+      key: "idol",
+    },
+    {
+      title: "유튜버",
+      key: "youtuber",
+    },
+    {
+      title: "가수",
+      key: "singer",
+    },
+    {
+      title: "19+",
+      key: "19_plus",
+    },
+  ],
+  girl: [
+    {
+      title: "배우",
+      key: "actor",
+    },
+    {
+      title: "아이돌",
+      key: "idol",
+    },
+    {
+      title: "유튜버",
+      key: "youtuber",
+    },
+    {
+      title: "가수",
+      key: "singer",
+    },
+    {
+      title: "19+",
+      key: "19_plus",
+    },
+  ],
+  etc: [
+    {
+      title: "그외",
+      key: "etc",
+    },
+  ],
+};
+
 const Create = () => {
   const router = useRouter();
   const [cupId, setCupId] = useState("");
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("girl");
+  const [mainCategory, setMainCategory] = useState("man");
+  const [subCategory, setSubCategory] = useState("actor");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("active");
-  // const [urls, setUrls] = useState([]);
-  const [urls, setUrls] = useState([
-    {
-      name: "이름1",
-      url: "https://realcup.s3.ap-northeast-2.amazonaws.com/63459e73df7b298e543b5ee7/SF_mSL60Y",
-    },
-    {
-      name: "이름2",
-      url: "https://realcup.s3.ap-northeast-2.amazonaws.com/63459e73df7b298e543b5ee7/Kz1TTSNDV",
-    },
-    {
-      name: "이름3",
-      url: "https://realcup.s3.ap-northeast-2.amazonaws.com/63459e73df7b298e543b5ee7/bpnCPkBhKu",
-    },
-  ]);
+  const [urls, setUrls] = useState([]);
+  // const [urls, setUrls] = useState([
+  //   {
+  //     name: "이름1",
+  //     url: "https://realcup.s3.ap-northeast-2.amazonaws.com/63459e73df7b298e543b5ee7/SF_mSL60Y",
+  //   },
+  //   {
+  //     name: "이름2",
+  //     url: "https://realcup.s3.ap-northeast-2.amazonaws.com/63459e73df7b298e543b5ee7/Kz1TTSNDV",
+  //   },
+  //   {
+  //     name: "이름3",
+  //     url: "https://realcup.s3.ap-northeast-2.amazonaws.com/63459e73df7b298e543b5ee7/bpnCPkBhKu",
+  //   },
+  // ]);
   const [current, setCurrent] = useState(0);
   const { uploadToS3 } = useS3Upload();
 
@@ -122,9 +171,10 @@ const Create = () => {
       if (!description) {
         return message.error("설명을 입력해주세요");
       }
-      if (!category) {
+      if (!mainCategory || !subCategory) {
         return message.error("카테고리를 선택해주세요");
       }
+      const category = `${mainCategory}_${subCategory}`;
       if (cupId) {
         await patchCup({
           _id: cupId,
@@ -137,6 +187,9 @@ const Create = () => {
         setCupId(data._id);
       }
     } else if (current === 1) {
+      if (urls.length < 2) {
+        return message.error("2개 이상의 이미지를 올려주세요");
+      }
       const params = {
         _id: cupId,
         images: urls,
@@ -182,6 +235,15 @@ const Create = () => {
     setUrls(newArr);
   };
 
+  const handleSelectMainCategory = (value) => {
+    setMainCategory(value);
+    if (value === "etc") {
+      setSubCategory("etc");
+    } else {
+      setSubCategory("actor");
+    }
+  };
+
   return (
     <>
       <HeaderComponent />
@@ -222,19 +284,38 @@ const Create = () => {
               </div>
               <div style={{ margin: "20px 0" }}></div>
               <div className="mb-1 text-xl">카테고리</div>
-              <Select
-                className="w-full"
-                size="large"
-                defaultValue="girl"
-                value={category}
-                onChange={(value) => setCategory(value)}
-              >
-                {CATEGORIES.map((item) => (
-                  <Option key={item.key} value={item.key}>
-                    {item.title}
-                  </Option>
-                ))}
-              </Select>
+              <Row gutter={[10, 10]}>
+                <Col span={12}>
+                  <Select
+                    className="w-full"
+                    size="large"
+                    defaultValue="girl"
+                    value={mainCategory}
+                    onChange={handleSelectMainCategory}
+                  >
+                    {MAIN_CATEGORIES.map((item) => (
+                      <Option key={item.key} value={item.key}>
+                        {item.title}
+                      </Option>
+                    ))}
+                  </Select>
+                </Col>
+                <Col span={12}>
+                  <Select
+                    className="w-full"
+                    size="large"
+                    defaultValue="girl"
+                    value={subCategory}
+                    onChange={(value) => setSubCategory(value)}
+                  >
+                    {SUB_CATEGORIES[mainCategory].map((item) => (
+                      <Option key={item.key} value={item.key}>
+                        {item.title}
+                      </Option>
+                    ))}
+                  </Select>
+                </Col>
+              </Row>
 
               <div className="mt-1">
                 <Text type="secondary">
@@ -300,43 +381,13 @@ const Create = () => {
                 justifyContent: "center",
               }}
             >
-              <Card
-                style={{
-                  width: 300,
-                }}
-                cover={
-                  <Row justify="center">
-                    <Col span={12}>
-                      <div
-                        className="card-cup-image"
-                        style={{
-                          backgroundImage: `url("${urls[0].url}")`,
-                        }}
-                      ></div>
-                    </Col>
-                    <Col span={12}>
-                      <div
-                        className="card-cup-image"
-                        style={{
-                          backgroundImage: `url("${urls[1].url}")`,
-                        }}
-                      ></div>
-                    </Col>
-                  </Row>
-                }
-                actions={[
-                  <div>
-                    <Text className="mr-2">통계</Text>
-                    <SignalFilled key="report" />
-                  </div>,
-                  <div>
-                    <Text className="mr-2 text-blue-500">시작</Text>
-                    <PlayCircleFilled key="play" className="text-blue-500" />
-                  </div>,
-                ]}
-              >
-                <Meta title={title} description={description} />
-              </Card>
+              <CupComponent
+                _id={cupId}
+                urls={urls}
+                title={title}
+                description={description}
+                isPreview={true}
+              />
               <div className="ml-4">
                 <Typography.Title level={2}>공개여부</Typography.Title>
 

@@ -1,12 +1,14 @@
-import { Menu } from "antd";
+import React, { useState, useEffect } from "react";
+import { Menu, Layout } from "antd";
 import {
   faPerson,
   faPersonDress,
   faSeedling,
 } from "@fortawesome/free-solid-svg-icons";
-import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
+import { debounce } from "lodash";
+const { Sider } = Layout;
 function getItem(label, key, icon, children, type) {
   return {
     key,
@@ -23,12 +25,14 @@ const items = [
     getItem("아이돌", "man_idol"),
     getItem("유튜버", "man_youtuber"),
     getItem("가수", "man_singer"),
+    getItem("19+", "man_19_plus"),
   ]),
   getItem("여자", "girl", <FontAwesomeIcon icon={faPersonDress} />, [
     getItem("배우", "girl_actor"),
     getItem("아이돌", "girl_idol"),
     getItem("유튜버", "girl_youtuber"),
     getItem("가수", "girl_singer"),
+    getItem("19+", "girl_19_plus"),
   ]),
   getItem("그외", "etc", <FontAwesomeIcon icon={faSeedling} />, [
     getItem("드라마", "drama"),
@@ -68,23 +72,51 @@ const items = [
 
 export const SidebarComponent = () => {
   const router = useRouter();
+  const [collapsed, setCollapsed] = useState(false);
   const onClick = (e) => {
     console.log("click ", e);
-    router.push(`/?category=${e.key}`);
+    router.push(`/board?category=${e.key}`);
   };
 
+  const handleResize = debounce(() => {
+    if (typeof window !== undefined) {
+      if (window.innerWidth < 1200) {
+        setCollapsed(true);
+      } else {
+        setCollapsed(false);
+      }
+    }
+  }, 100);
+
+  useEffect(() => {
+    if (window.innerWidth < 1200) {
+      setCollapsed(true);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
-    <Menu
-      onClick={onClick}
-      style={{
-        width: 256,
-        height: "100%",
-        float: "left",
-      }}
-      defaultSelectedKeys={["1"]}
-      defaultOpenKeys={["sub1"]}
-      mode="inline"
-      items={items}
-    />
+    <Sider
+      trigger={null}
+      collapsible
+      collapsed={collapsed}
+      style={{ flex: "none" }}
+    >
+      <Menu
+        onClick={onClick}
+        style={{
+          // width: 256,
+          height: "100%",
+          float: "left",
+        }}
+        defaultSelectedKeys={["1"]}
+        defaultOpenKeys={["sub1"]}
+        mode="inline"
+        items={items}
+      />
+    </Sider>
   );
 };

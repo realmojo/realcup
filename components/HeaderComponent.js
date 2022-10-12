@@ -19,10 +19,17 @@ export const HeaderComponent = observer(() => {
       router.push("/login");
     }
   };
+  const goHome = () => {
+    router.push("/");
+  };
   return (
     <PageHeader
       className="site-page-header"
-      title="리얼컵"
+      title={
+        <div style={{ cursor: "pointer" }} onClick={() => goHome()}>
+          리얼컵
+        </div>
+      }
       extra={[
         <Button key="create" onClick={doCreate}>
           월드컵 만들기

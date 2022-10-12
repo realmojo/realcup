@@ -1,8 +1,19 @@
 import { axiosInstance as axios } from ".";
 
-export const getCup = async (id) => {
+export const getCup = async (_id) => {
   try {
-    const { data } = await axios.get("/cup", id);
+    const { data } = await axios.get(`/cup/${_id}`);
+    return data;
+  } catch (e) {
+    throw e.response.data;
+  }
+};
+
+export const getCupList = async (category, page = 1) => {
+  try {
+    const { data } = await axios.get(
+      `/cup/list?category=${category}&page=${page}`
+    );
     return data;
   } catch (e) {
     throw e.response.data;

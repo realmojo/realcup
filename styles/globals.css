@@ -12,6 +12,14 @@
   min-width: 256px !important;
   width: 256px !important;
 }
+@media (max-width: 1200px) {
+  .ant-layout-sider {
+    flex: 0 0 50px;
+    max-width: 50px !important;
+    min-width: 50px !important;
+    width: 50px !important;
+  }
+}
 .ant-layout-content {
   margin: 0 !important;
   min-height: 100vh;
