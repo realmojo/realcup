@@ -1,7 +1,9 @@
 import { Button, PageHeader } from "antd";
+import { MenuOutlined } from "@ant-design/icons";
 import React from "react";
 import Link from "next/link";
 import { storeLogin } from "../stores/login";
+import { storeCommon } from "../stores/common";
 import { observer } from "mobx-react";
 import { useRouter } from "next/router";
 
@@ -26,8 +28,29 @@ export const HeaderComponent = observer(() => {
     <PageHeader
       className="site-page-header"
       title={
-        <div style={{ cursor: "pointer" }} onClick={() => goHome()}>
-          리얼컵
+        <div>
+          {storeCommon.isSidebarOpen ? (
+            <MenuOutlined
+              className="mr-3"
+              onClick={() => {
+                storeCommon.setIsMenuOpen(!storeCommon.isMenuOpen);
+              }}
+            />
+          ) : (
+            <img
+              src="https://realcup.s3.ap-northeast-2.amazonaws.com/logo.png"
+              alt="logo"
+              style={{
+                width: 26,
+                height: 26,
+                marginTop: 2,
+                marginRight: 4,
+              }}
+            />
+          )}
+          <span style={{ cursor: "pointer" }} onClick={() => goHome()}>
+            리얼컵
+          </span>
         </div>
       }
       extra={[

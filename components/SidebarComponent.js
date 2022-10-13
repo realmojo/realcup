@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Menu, Layout } from "antd";
 import {
   faPerson,
   faPersonDress,
   faSeedling,
 } from "@fortawesome/free-solid-svg-icons";
+import { storeCommon } from "../stores/common";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import { debounce } from "lodash";
+import { observer } from "mobx-react";
 const { Sider } = Layout;
 function getItem(label, key, icon, children, type) {
   return {
@@ -35,62 +37,29 @@ const items = [
     getItem("19+", "girl_19_plus"),
   ]),
   getItem("그외", "etc", <FontAwesomeIcon icon={faSeedling} />, [
-    getItem("드라마", "drama"),
-    getItem("웹툰", "webtoon"),
+    getItem("이것저것", "etc_etc"),
   ]),
-  // getItem("Navigation One", "sub1", <MailOutlined />, [
-  //   getItem(
-  //     "Item 1",
-  //     "g1",
-  //     null,
-  //     [getItem("Option 1", "1"), getItem("Option 2", "2")],
-  //     "group"
-  //   ),
-  //   getItem(
-  //     "Item 2",
-  //     "g2",
-  //     null,
-  //     [getItem("Option 3", "3"), getItem("Option 4", "4")],
-  //     "group"
-  //   ),
-  // ]),
-  // getItem("", "sub2", <AppstoreOutlined />, [
-  //   getItem("Option 5", "5"),
-  //   getItem("Option 6", "6"),
-  //   getItem("Submenu", "sub3", null, [
-  //     getItem("Option 7", "7"),
-  //     getItem("Option 8", "8"),
-  //   ]),
-  // ]),
-  // getItem("Navigation Three", "sub4", <SettingOutlined />, [
-  //   getItem("Option 9", "9"),
-  //   getItem("Option 10", "10"),
-  //   getItem("Option 11", "11"),
-  //   getItem("Option 12", "12"),
-  // ]),
 ];
 
-export const SidebarComponent = () => {
+export const SidebarComponent = observer(() => {
   const router = useRouter();
-  const [collapsed, setCollapsed] = useState(false);
   const onClick = (e) => {
-    console.log("click ", e);
     router.push(`/board?category=${e.key}`);
   };
 
   const handleResize = debounce(() => {
     if (typeof window !== undefined) {
       if (window.innerWidth < 1200) {
-        setCollapsed(true);
+        storeCommon.setIsSidebarOpen(true);
       } else {
-        setCollapsed(false);
+        storeCommon.setIsSidebarOpen(false);
       }
     }
   }, 100);
 
   useEffect(() => {
     if (window.innerWidth < 1200) {
-      setCollapsed(true);
+      storeCommon.setIsSidebarOpen(true);
     }
     window.addEventListener("resize", handleResize);
     return () => {
@@ -102,15 +71,23 @@ export const SidebarComponent = () => {
     <Sider
       trigger={null}
       collapsible
-      collapsed={collapsed}
+      collapsed={storeCommon.isSidebarOpen && !storeCommon.isMenuOpen}
       style={{ flex: "none" }}
+      className={
+        storeCommon.isSidebarOpen && !storeCommon.isMenuOpen
+          ? "realcup-sidebar-hide"
+          : "realcup-sidebar-open"
+      }
     >
       <Menu
         onClick={onClick}
         style={{
-          // width: 256,
           height: "100%",
           float: "left",
+          display:
+            storeCommon.isSidebarOpen && !storeCommon.isMenuOpen
+              ? "none"
+              : "block",
         }}
         defaultSelectedKeys={["1"]}
         defaultOpenKeys={["sub1"]}
@@ -119,4 +96,4 @@ export const SidebarComponent = () => {
       />
     </Sider>
   );
-};
+});
