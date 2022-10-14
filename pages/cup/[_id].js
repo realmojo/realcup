@@ -31,13 +31,14 @@ const shuffle = (array) => {
 const nextImageItems = [];
 const Cup = observer(({ data }) => {
   const router = useRouter();
-  const [isStatusClick, setIsStatusClick] = useState(true);
   const [isLeftClick, setIsLeftClick] = useState(false);
   const [isRightClick, setIsRightClick] = useState(false);
   const [item, setItem] = useState(data);
   const [imageItems, setImageItems] = useState(data.images);
+  const [isGameClear, setIsGameClear] = useState(false);
+  const [finalImage, setFinalImage] = useState({});
   // const [nextImageItems, setNextImageItems] = useState([]);
-  const [currentRound, setCurrentRound] = useState(1);
+  // const [currentRound, setCurrentRound] = useState(1);
   const [round, setRound] = useState(8 / 2);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOk = () => {
@@ -51,7 +52,8 @@ const Cup = observer(({ data }) => {
   const doClick = (index, arrow) => {
     if (storeCup.isStatusClick) {
       storeCup.setIsStatusClick(false);
-      const currNumber = currentRound;
+      const { currentRound } = storeCup;
+
       // 이미지 처리
       if (arrow === ARROW.LEFT) {
         setIsLeftClick(true);
@@ -75,25 +77,32 @@ const Cup = observer(({ data }) => {
       // 현재 라운드
       console.log(nextImageItems);
       setTimeout(() => {
-        setCurrentRound(++currNumber);
+        storeCup.setCurrentRound(++currentRound);
       }, 1000);
 
       // 다음 라운드로 넘어갈 때
-      console.log(currentRound);
-      if (currNumber === round) {
+      console.log("currentRound: ", currentRound);
+      if (currentRound === round) {
         const nextRound = round / 2;
         if (Math.floor(nextRound) === 0) {
-          console.log("game over");
+          console.log("game clear");
           setTimeout(() => {
-            router.push("/result");
-          }, 2000);
+            setIsGameClear(true);
+          }, 1000);
+          setImageItems([]);
+          setFinalImage(imageItems[index]);
+          storeCup.setCurrentRound(1);
+          nextImageItems = [];
+          // setTimeout(() => {
+          //   router.push("/result");
+          // }, 2000);
         } else {
           console.log("next");
           console.log("round: ", round);
           console.log(nextImageItems);
           setTimeout(() => {
             setRound(round / 2);
-            setCurrentRound(1);
+            storeCup.setCurrentRound(1);
             setImageItems(nextImageItems);
             nextImageItems = [];
           }, 1000);
@@ -172,45 +181,91 @@ const Cup = observer(({ data }) => {
         <Content className="board-bg-color">
           <div className="text-center pt-4">
             <Title style={{ color: "rgb(241 245 249" }}>
-              {item.title} {round === 1 ? "결승" : `${currentRound}/${round}`}
+              {item.title}{" "}
+              {isGameClear
+                ? "우승"
+                : round === 1
+                ? "결승"
+                : `${storeCup.currentRound}/${round}`}
             </Title>
           </div>
-          <Row gutter={[10, 10]}>
-            <Col
-              className={`cup-image-column ${
-                isRightClick
-                  ? "cup-image-column-not-selected w-full"
-                  : "cup-image-column-selected"
-              }`}
-              span={12}
-              onClick={() => doClick(0, "left")}
-            >
-              <Image
-                className={`cup-image ${isRightClick ? "hidden" : "block"}`}
-                src={imageItems[0].url}
-                layout="fill"
-                alt="image-1"
-                preview={false}
-              />
-            </Col>
-            <Col
-              className={`cup-image-column ${
-                isLeftClick
-                  ? "cup-image-column-not-selected w-full"
-                  : "cup-image-column-selected"
-              }`}
-              span={12}
-              onClick={() => doClick(1, "right")}
-            >
-              <Image
-                className={`cup-image ${isLeftClick ? "hidden" : "block"}`}
-                src={imageItems[1].url}
-                layout="fill"
-                alt="image-2"
-                preview={false}
-              />
-            </Col>
-          </Row>
+          {isGameClear ? (
+            <Row gutter={[10, 10]}>
+              <Col span={12} offset={6}>
+                <div className="relative">
+                  <Image
+                    className="cup-image"
+                    src={finalImage.url}
+                    // layout="fill"
+                    alt="image-1"
+                    preview={false}
+                  />
+                </div>
+              </Col>
+            </Row>
+          ) : (
+            ""
+          )}
+          {imageItems.length > 0 ? (
+            <Row gutter={[10, 10]}>
+              <Col
+                className={`cup-image-column ${
+                  isRightClick
+                    ? "cup-image-column-not-selected w-full"
+                    : "cup-image-column-selected"
+                }`}
+                span={12}
+                onClick={() => doClick(0, "left")}
+              >
+                <div className="relative">
+                  <Image
+                    className={`cup-image ${isRightClick ? "hidden" : "block"}`}
+                    src={imageItems[0].url}
+                    layout="fill"
+                    alt="image-1"
+                    preview={false}
+                  />
+                  <div
+                    style={{
+                      textShadow: "1px 1px 2px black",
+                    }}
+                    className="text-3xl absolute top-0 justify-center w-full text-slate-100"
+                  >
+                    {imageItems[0].name}
+                  </div>
+                </div>
+              </Col>
+              <Col
+                className={`cup-image-column ${
+                  isLeftClick
+                    ? "cup-image-column-not-selected w-full"
+                    : "cup-image-column-selected"
+                }`}
+                span={12}
+                onClick={() => doClick(1, "right")}
+              >
+                <div className="relative">
+                  <Image
+                    className={`cup-image ${isLeftClick ? "hidden" : "block"}`}
+                    src={imageItems[1].url}
+                    layout="fill"
+                    alt="image-2"
+                    preview={false}
+                  />
+                  <div
+                    style={{
+                      textShadow: "1px 1px 2px black",
+                    }}
+                    className="text-3xl absolute top-0 justify-center w-full text-slate-100"
+                  >
+                    {imageItems[1].name}
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          ) : (
+            ""
+          )}
         </Content>
       </Layout>
     </>
