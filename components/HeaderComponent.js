@@ -21,6 +21,13 @@ export const HeaderComponent = observer(() => {
       router.push("/login");
     }
   };
+  const doMyCup = () => {
+    if (storeLogin.isLogin) {
+      router.push("/create/my");
+    } else {
+      router.push("/login");
+    }
+  };
   const goHome = () => {
     router.push("/");
   };
@@ -43,7 +50,7 @@ export const HeaderComponent = observer(() => {
               style={{
                 width: 26,
                 height: 26,
-                marginTop: 2,
+                marginTop: -4,
                 marginRight: 4,
               }}
             />
@@ -54,6 +61,9 @@ export const HeaderComponent = observer(() => {
         </div>
       }
       extra={[
+        <Button key="my" onClick={doMyCup}>
+          내 월드컵
+        </Button>,
         <Button key="create" onClick={doCreate}>
           월드컵 만들기
         </Button>,

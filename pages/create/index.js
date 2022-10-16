@@ -16,12 +16,19 @@ import {
 } from "antd";
 import { HeaderComponent } from "../../components/HeaderComponent";
 import { useS3Upload } from "next-s3-upload";
-import { addCup, patchCup, patchCupImage, patchCupStatus } from "../../api/cup";
+import {
+  addCup,
+  getCup,
+  patchCup,
+  patchCupImage,
+  patchCupStatus,
+} from "../../api/cup";
 import { useRouter } from "next/router";
 import { CupComponent } from "../../components/CupComponent";
+import shortId from "shortid";
+import { storeLogin } from "../../stores/login";
 
 const { Option } = Select;
-const { Meta } = Card;
 const { Text } = Typography;
 const { Step } = Steps;
 
@@ -116,29 +123,24 @@ const SUB_CATEGORIES = {
   ],
 };
 
-const Create = () => {
+const Create = ({ _id, data }) => {
   const router = useRouter();
-  const [cupId, setCupId] = useState("");
-  const [title, setTitle] = useState("");
-  const [mainCategory, setMainCategory] = useState("man");
-  const [subCategory, setSubCategory] = useState("actor");
-  const [description, setDescription] = useState("");
-  const [status, setStatus] = useState("active");
-  const [urls, setUrls] = useState([]);
-  // const [urls, setUrls] = useState([
-  //   {
-  //     name: "이름1",
-  //     url: "https://realcup.s3.ap-northeast-2.amazonaws.com/63459e73df7b298e543b5ee7/SF_mSL60Y",
-  //   },
-  //   {
-  //     name: "이름2",
-  //     url: "https://realcup.s3.ap-northeast-2.amazonaws.com/63459e73df7b298e543b5ee7/Kz1TTSNDV",
-  //   },
-  //   {
-  //     name: "이름3",
-  //     url: "https://realcup.s3.ap-northeast-2.amazonaws.com/63459e73df7b298e543b5ee7/bpnCPkBhKu",
-  //   },
-  // ]);
+  if (data?._id && data._userId !== storeLogin.userId) {
+    message.error("본인의 월드컵이 아닙니다.");
+    router.push("/");
+  }
+
+  const [cupId, setCupId] = useState(data?._id || "");
+  const [title, setTitle] = useState(data?.title || "");
+  const [mainCategory, setMainCategory] = useState(
+    data?.category.split("_")[0] || "man"
+  );
+  const [subCategory, setSubCategory] = useState(
+    data?.category.split("_")[1] || "actor"
+  );
+  const [description, setDescription] = useState(data?.description || "");
+  const [status, setStatus] = useState(data?.status || "active");
+  const [urls, setUrls] = useState(data?.images || []);
   const [current, setCurrent] = useState(0);
   const { uploadToS3 } = useS3Upload();
 
@@ -156,6 +158,7 @@ const Create = () => {
         },
       });
       const param = {
+        _id: shortId.generate(),
         name: file.name.trim().replace(/(.png|.jpg|.jpeg|.gif)$/, ""),
         url,
       };
@@ -187,8 +190,8 @@ const Create = () => {
         setCupId(data._id);
       }
     } else if (current === 1) {
-      if (urls.length < 2) {
-        return message.error("2개 이상의 이미지를 올려주세요");
+      if (urls.length < 8) {
+        return message.error("8개 이상의 이미지를 올려주세요");
       }
       const params = {
         _id: cupId,
@@ -210,8 +213,9 @@ const Create = () => {
     };
     try {
       const data = await patchCupStatus(params);
-      console.log(data);
-      if (data._id && status === "active") {
+      if (_id) {
+        message.success("월드컵 수정이 완료되었습니다.");
+      } else if (data._id && status === "active") {
         message.success("월드컵 생성이 완료되었습니다.");
       } else {
         message.warn("월드컵이 비공개 처리 되었습니다.");
@@ -432,34 +436,21 @@ const Create = () => {
             </Button>
           )}
         </div>
-        {/* <Card title="월드컵 만들기">
-          <div className="mb-1 text-xl">제목</div>
-          <Input size="large" placeholder="월드컵 제목을 입력해주세요" />
-          <div className="mt-1">
-            <Text type="secondary">
-              월드컵의 제목을 입력해주세요. 예) 여자 연예인 월드컵, 남자 아이돌
-              월드컵
-            </Text>
-          </div>
-          <div style={{ margin: "20px 0" }}></div>
-          <div className="mb-1 text-xl">설명</div>
-          <Input
-            size="large"
-            placeholder="월드컵에 대한 간단한 설명을 입력해주세요"
-          />
-          <div className="mt-1">
-            <Text type="secondary">월드컵의 설명을 자유롭게 입력해주세요.</Text>
-          </div>
-          <div style={{ margin: "20px 0" }}></div>
-          <div className="float-right">
-            <Button size="large" type="primary" onClick={doCreate}>
-              저장하기
-            </Button>
-          </div>
-        </Card> */}
       </div>
     </>
   );
 };
+
+export async function getServerSideProps(context) {
+  const { _id } = context.query;
+  if (_id) {
+    const data = await getCup(_id, false);
+    return {
+      props: { _id, data }, // will be passed to the page component as props
+    };
+  } else {
+    return { props: {} };
+  }
+}
 
 export default Create;

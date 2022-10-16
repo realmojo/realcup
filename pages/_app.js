@@ -5,12 +5,18 @@ import "../styles/footer.css";
 import "../styles/create.css";
 import "../styles/board.css";
 import { storeLogin } from "../stores/login";
+import NextNProgress from "nextjs-progressbar";
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
     storeLogin.initLogin();
   }, []);
-  return <Component {...pageProps} />;
+  return (
+    <>
+      <NextNProgress />
+      <Component {...pageProps} />
+    </>
+  );
 }
 
 export default MyApp;

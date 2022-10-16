@@ -37,8 +37,6 @@ const Cup = observer(({ data }) => {
   const [imageItems, setImageItems] = useState(data.images);
   const [isGameClear, setIsGameClear] = useState(false);
   const [finalImage, setFinalImage] = useState({});
-  // const [nextImageItems, setNextImageItems] = useState([]);
-  // const [currentRound, setCurrentRound] = useState(1);
   const [round, setRound] = useState(8 / 2);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOk = () => {
@@ -75,31 +73,26 @@ const Cup = observer(({ data }) => {
       }, 1000);
 
       // 현재 라운드
-      console.log(nextImageItems);
       setTimeout(() => {
         storeCup.setCurrentRound(++currentRound);
       }, 1000);
 
       // 다음 라운드로 넘어갈 때
-      console.log("currentRound: ", currentRound);
       if (currentRound === round) {
         const nextRound = round / 2;
         if (Math.floor(nextRound) === 0) {
-          console.log("game clear");
+          setFinalImage(imageItems[index]);
+          storeCup.setFinalImage(imageItems[index]);
           setTimeout(() => {
             setIsGameClear(true);
+            setImageItems([]);
+            storeCup.setCurrentRound(1);
+            nextImageItems = [];
           }, 1000);
-          setImageItems([]);
-          setFinalImage(imageItems[index]);
-          storeCup.setCurrentRound(1);
-          nextImageItems = [];
-          // setTimeout(() => {
-          //   router.push("/result");
-          // }, 2000);
+          setTimeout(() => {
+            router.push(`/result/${item._id}`);
+          }, 2000);
         } else {
-          console.log("next");
-          console.log("round: ", round);
-          console.log(nextImageItems);
           setTimeout(() => {
             setRound(round / 2);
             storeCup.setCurrentRound(1);
@@ -116,9 +109,8 @@ const Cup = observer(({ data }) => {
   };
 
   useEffect(() => {
-    setIsModalOpen(false);
-    console.log();
-    // shuffle(item);
+    setIsModalOpen(true);
+    shuffle(imageItems);
   }, []);
 
   return (
@@ -175,7 +167,7 @@ const Cup = observer(({ data }) => {
         </div>
       </Modal>
       <Layout>
-        <div style={{ width: "100%", height: 80, backgroundColor: "gray" }}>
+        <div style={{ width: "100%", height: 100, backgroundColor: "gray" }}>
           애드센스
         </div>
         <Content className="board-bg-color">
@@ -190,19 +182,17 @@ const Cup = observer(({ data }) => {
             </Title>
           </div>
           {isGameClear ? (
-            <Row gutter={[10, 10]}>
-              <Col span={12} offset={6}>
-                <div className="relative">
-                  <Image
-                    className="cup-image"
-                    src={finalImage.url}
-                    // layout="fill"
-                    alt="image-1"
-                    preview={false}
-                  />
-                </div>
-              </Col>
-            </Row>
+            <div className="final-image-container">
+              <Image
+                className="cup-image"
+                src={finalImage.url}
+                alt="image-1"
+                preview={false}
+              />
+              <div className="text-center text-shadow text-3xl absolute top-0 justify-center w-full text-slate-100">
+                {finalImage.name}
+              </div>
+            </div>
           ) : (
             ""
           )}
@@ -217,7 +207,7 @@ const Cup = observer(({ data }) => {
                 span={12}
                 onClick={() => doClick(0, "left")}
               >
-                <div className="relative">
+                <div className={isRightClick ? "hidden" : "block"}>
                   <Image
                     className={`cup-image ${isRightClick ? "hidden" : "block"}`}
                     src={imageItems[0].url}
@@ -225,12 +215,7 @@ const Cup = observer(({ data }) => {
                     alt="image-1"
                     preview={false}
                   />
-                  <div
-                    style={{
-                      textShadow: "1px 1px 2px black",
-                    }}
-                    className="text-3xl absolute top-0 justify-center w-full text-slate-100"
-                  >
+                  <div className="text-shadow text-3xl absolute top-0 justify-center w-full text-slate-100">
                     {imageItems[0].name}
                   </div>
                 </div>
@@ -244,20 +229,15 @@ const Cup = observer(({ data }) => {
                 span={12}
                 onClick={() => doClick(1, "right")}
               >
-                <div className="relative">
+                <div className={isLeftClick ? "hidden" : "block"}>
                   <Image
-                    className={`cup-image ${isLeftClick ? "hidden" : "block"}`}
+                    className={`cup-image`}
                     src={imageItems[1].url}
                     layout="fill"
                     alt="image-2"
                     preview={false}
                   />
-                  <div
-                    style={{
-                      textShadow: "1px 1px 2px black",
-                    }}
-                    className="text-3xl absolute top-0 justify-center w-full text-slate-100"
-                  >
+                  <div className="text-shadow text-3xl absolute top-0 justify-center w-full text-slate-100">
                     {imageItems[1].name}
                   </div>
                 </div>
@@ -274,7 +254,7 @@ const Cup = observer(({ data }) => {
 
 export async function getServerSideProps(context) {
   const { _id } = context.params;
-  const data = await getCup(_id);
+  const data = await getCup(_id, true);
   return {
     props: { data }, // will be passed to the page component as props
   };

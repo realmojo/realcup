@@ -18,6 +18,7 @@ const Login = () => {
       const loginData = await authLogin(params);
       message.success("로그인 합니다.");
       storeLogin.setJWT(loginData.access_token);
+      storeLogin.setUserId(loginData.userId);
       location.href = "/";
     } catch (e) {
       message.error(e.message);

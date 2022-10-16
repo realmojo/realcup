@@ -3,6 +3,7 @@ import { axiosInstance as axios } from "../api";
 
 const storeLogin = observable({
   isLogin: false,
+  userId: "",
   jwt: "",
   setJWT(value) {
     this.jwt = value;
@@ -16,9 +17,11 @@ const storeLogin = observable({
   },
   initLogin() {
     const jwt = localStorage.getItem("jwt");
+    const userId = localStorage.getItem("userId");
     this.isLogin = jwt !== null ? true : false;
     if (this.isLogin) {
       this.jwt = jwt;
+      this.userId = userId;
     }
     axios.interceptors.request.use(
       (config) => {
@@ -35,6 +38,10 @@ const storeLogin = observable({
   },
   logout() {
     this.isLogin = false;
+  },
+  setUserId(value) {
+    this.userId = value;
+    localStorage.setItem("userId", value);
   },
 });
 

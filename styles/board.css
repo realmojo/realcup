@@ -18,3 +18,17 @@
   margin: 0 auto;
   /* width: 300px; */
 }
+
+.text-shadow {
+  text-shadow: 1px 1px 2px black;
+}
+
+.final-image-container {
+  position: relative;
+  margin: 0 auto;
+  width: 50%;
+}
+
+.final-image {
+  max-width: 400px;
+}
