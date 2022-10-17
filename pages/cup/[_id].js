@@ -168,10 +168,10 @@ const Cup = observer(({ data }) => {
         </div>
       </Modal>
       <Layout>
-        <Adsense slotId="9253247567" />
+        <Adsense slotId="9253247567" height="90px" />
         <Content className="board-bg-color">
           <div className="text-center pt-4">
-            <Title className="text-slate-400">
+            <Title style={{ color: "rgb(226, 232, 240)" }}>
               {item.title}{" "}
               {isGameClear
                 ? "우승"
