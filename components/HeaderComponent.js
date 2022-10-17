@@ -1,4 +1,4 @@
-import { Button, PageHeader } from "antd";
+import { Button, PageHeader, Image } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import React from "react";
 import Link from "next/link";
@@ -44,15 +44,11 @@ export const HeaderComponent = observer(() => {
               }}
             />
           ) : (
-            <img
+            <Image
+              style={{ width: 26, height: 26, marginTop: -4, marginRight: 4 }}
               src="https://realcup.s3.ap-northeast-2.amazonaws.com/logo.png"
               alt="logo"
-              style={{
-                width: 26,
-                height: 26,
-                marginTop: -4,
-                marginRight: 4,
-              }}
+              preview={false}
             />
           )}
           <span style={{ cursor: "pointer" }} onClick={() => goHome()}>
