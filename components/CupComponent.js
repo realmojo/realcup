@@ -60,22 +60,37 @@ export const CupComponent = ({
       }}
       cover={
         <Row justify="center">
-          <Col span={12}>
-            <div
-              className="card-cup-image"
-              style={{
-                backgroundImage: `url("${urls[0].url}")`,
-              }}
-            ></div>
-          </Col>
-          <Col span={12}>
-            <div
-              className="card-cup-image"
-              style={{
-                backgroundImage: `url("${urls[1].url}")`,
-              }}
-            ></div>
-          </Col>
+          {urls.length > 2 ? (
+            <>
+              <Col span={12}>
+                <div
+                  className="card-cup-image"
+                  style={{
+                    backgroundImage: `url("${urls[0].url}")`,
+                  }}
+                ></div>
+              </Col>
+              <Col span={12}>
+                <div
+                  className="card-cup-image"
+                  style={{
+                    backgroundImage: `url("${urls[1].url}")`,
+                  }}
+                ></div>
+              </Col>
+            </>
+          ) : (
+            <Col span={24}>
+              <div
+                className="card-cup-image"
+                style={{
+                  width: 130,
+                  height: 130,
+                  backgroundImage: `url("https://realcup.s3.ap-northeast-2.amazonaws.com/upload.png")`,
+                }}
+              ></div>
+            </Col>
+          )}
         </Row>
       }
       actions={actions}
