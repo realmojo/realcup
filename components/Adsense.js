@@ -15,10 +15,13 @@ export const Adsense = ({ slotId, adFormat = "auto", height }) => {
   return (
     <>
       {isProduction ? (
-        <div style={{ width: "100%", height: height ? height : "none" }}>
+        <div style={{ width: "100%", height: height ? `${height}px` : "none" }}>
           <ins
             className="adsbygoogle"
-            style={{ display: "block", height: height ? height : "none" }}
+            style={{
+              display: "block",
+              height: height ? `${height}px` : "none",
+            }}
             data-ad-client="ca-pub-9130836798889522"
             data-ad-slot={slotId}
             data-ad-format={adFormat}
@@ -26,7 +29,7 @@ export const Adsense = ({ slotId, adFormat = "auto", height }) => {
           ></ins>
         </div>
       ) : (
-        <div style={{ width: "100%", height: 90, backgroundColor: "gray" }}>
+        <div style={{ width: "100%", height: "90px", backgroundColor: "gray" }}>
           애드센스
         </div>
       )}
