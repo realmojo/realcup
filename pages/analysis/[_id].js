@@ -79,15 +79,15 @@ const Analysis = ({ data }) => {
               xxl={{ span: 12 }}
               className="px-4 py-4 text-center"
             >
+              <Title level={2}>
+                <Text className="text-blue-400">{item.title}</Text> 통계 페이지
+              </Title>
               <Adsense
                 slotId="2865338157"
                 style={{ display: "block" }}
                 adFormat="auto"
                 isResponsive={true}
               />
-              <Title level={2}>
-                <Text className="text-blue-400">{item.title}</Text> 통계 페이지
-              </Title>
               <Table columns={columns} dataSource={item.images} key="1" />
             </Col>
           </Row>

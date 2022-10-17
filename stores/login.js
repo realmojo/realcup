@@ -15,6 +15,9 @@ const storeLogin = observable({
   removeJWT() {
     localStorage.removeItem("jwt");
   },
+  removeUserId() {
+    localStorage.removeItem("userId");
+  },
   initLogin() {
     const jwt = localStorage.getItem("jwt");
     const userId = localStorage.getItem("userId");

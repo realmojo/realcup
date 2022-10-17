@@ -12,6 +12,7 @@ export const HeaderComponent = observer(() => {
   const doLogout = () => {
     storeLogin.logout();
     storeLogin.removeJWT();
+    storeLogin.removeUserId();
     location.href = "/";
   };
   const doCreate = () => {
