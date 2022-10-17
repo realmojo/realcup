@@ -6,6 +6,7 @@ import "../styles/create.css";
 import "../styles/board.css";
 import { storeLogin } from "../stores/login";
 import NextNProgress from "nextjs-progressbar";
+import { Head } from "next/document";
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
@@ -13,6 +14,9 @@ function MyApp({ Component, pageProps }) {
   }, []);
   return (
     <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
       <NextNProgress />
       <Component {...pageProps} />
     </>

@@ -5,6 +5,7 @@ import { getCup } from "../../api/cup";
 import { storeCup } from "../../stores/cup";
 import { useRouter } from "next/router";
 import { observer } from "mobx-react";
+import { Adsense } from "../../components/Adsense";
 const { Option } = Select;
 const { Text, Title } = Typography;
 const { Content } = Layout;
@@ -167,9 +168,7 @@ const Cup = observer(({ data }) => {
         </div>
       </Modal>
       <Layout>
-        <div style={{ width: "100%", height: 100, backgroundColor: "gray" }}>
-          애드센스
-        </div>
+        <Adsense ad-slot="9253247567" />
         <Content className="board-bg-color">
           <div className="text-center pt-4">
             <Title style={{ color: "rgb(241 245 249" }}>

@@ -5,6 +5,7 @@ import { HeaderComponent } from "../../components";
 import Head from "next/head";
 import { getCup } from "../../api/cup";
 import { useRouter } from "next/router";
+import { Adsense } from "../../components/Adsense";
 const { Title, Text } = Typography;
 const { Content } = Layout;
 
@@ -78,6 +79,7 @@ const Analysis = ({ data }) => {
               xxl={{ span: 12 }}
               className="px-4 py-4 text-center"
             >
+              <Adsense slotId="2865338157" />
               <Title level={2}>
                 <Text className="text-blue-400">{item.title}</Text> 통계 페이지
               </Title>

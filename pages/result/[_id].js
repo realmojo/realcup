@@ -21,6 +21,7 @@ import { useRouter } from "next/router";
 import shortId from "shortid";
 import { addComment, getCommentList } from "../../api/comment";
 import moment from "moment";
+import { Adsense } from "../../components/Adsense";
 const { Content } = Layout;
 const { Text } = Typography;
 
@@ -126,34 +127,36 @@ const Result = ({ data }) => {
                 </Text>
                 회 우승하였습니다.
               </div>
-              <Button
-                className="mr-2"
-                size="large"
-                danger
-                onClick={() => router.push(`/cup/${item._id}`)}
-              >
-                리플레이
-              </Button>
-              <Button
-                className="mr-2"
-                size="large"
-                danger
-                onClick={() => router.push(`/analysis/${item._id}`)}
-              >
-                랭킹분석
-              </Button>
-              <Button
-                className="mr-2"
-                size="large"
-                danger
-                onClick={() => router.push("/")}
-              >
-                홈으로
-              </Button>
-              <Button size="large" onClick={() => copy()} type="primary">
-                링크복사
-              </Button>
-
+              <Adsense slotId="1318917221" />
+              <div className="mt-4">
+                <Button
+                  className="mr-2"
+                  size="large"
+                  danger
+                  onClick={() => router.push(`/cup/${item._id}`)}
+                >
+                  리플레이
+                </Button>
+                <Button
+                  className="mr-2"
+                  size="large"
+                  danger
+                  onClick={() => router.push(`/analysis/${item._id}`)}
+                >
+                  랭킹분석
+                </Button>
+                <Button
+                  className="mr-2"
+                  size="large"
+                  danger
+                  onClick={() => router.push("/")}
+                >
+                  홈으로
+                </Button>
+                <Button size="large" onClick={() => copy()} type="primary">
+                  링크복사
+                </Button>
+              </div>
               <div className="mt-4">
                 <Text className="text-slate-500">한줄평 남기기</Text>
                 <Input.Group compact>
