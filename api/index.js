@@ -8,6 +8,6 @@ export const axiosInstance = axios.create({
   },
   baseURL:
     process.env.NODE_ENV === "production"
-      ? "https://realcup.co.kr/api"
+      ? "https://realcup.co.kr/api/v1"
       : "http://localhost:8080", // baseUrl
 });
