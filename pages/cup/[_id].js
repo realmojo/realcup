@@ -38,7 +38,7 @@ const Cup = observer(({ data }) => {
   const [imageItems, setImageItems] = useState(data.images);
   const [isGameClear, setIsGameClear] = useState(false);
   const [finalImage, setFinalImage] = useState({});
-  const [round, setRound] = useState(8 / 2);
+  const [round, setRound] = useState(4);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOk = () => {
     setIsModalOpen(false);
@@ -79,9 +79,9 @@ const Cup = observer(({ data }) => {
       }, 1000);
 
       // 다음 라운드로 넘어갈 때
-      if (currentRound === round) {
+      if (currentRound === round / 2) {
         const nextRound = round / 2;
-        if (Math.floor(nextRound) === 0) {
+        if (Math.floor(nextRound) === 1) {
           setFinalImage(imageItems[index]);
           storeCup.setFinalImage(imageItems[index]);
           setTimeout(() => {
@@ -134,7 +134,7 @@ const Cup = observer(({ data }) => {
             <div
               className="card-cup-image"
               style={{
-                backgroundImage: `url("${item.images[0].url}")`,
+                backgroundImage: `url("${item?.images[0]?.url}")`,
               }}
             ></div>
           </Col>
@@ -142,7 +142,7 @@ const Cup = observer(({ data }) => {
             <div
               className="card-cup-image"
               style={{
-                backgroundImage: `url("${item.images[1].url}")`,
+                backgroundImage: `url("${item?.images[1]?.url}")`,
               }}
             ></div>
           </Col>
@@ -179,21 +179,21 @@ const Cup = observer(({ data }) => {
               {item.title}{" "}
               {isGameClear
                 ? "우승"
-                : round === 1
+                : round === 2
                 ? "결승"
-                : `${storeCup.currentRound}/${round}`}
+                : `${storeCup.currentRound}/${round / 2}`}
             </Title>
           </div>
           {isGameClear ? (
-            <div className="final-image-container">
+            <div className="final-image-container text-center">
               <Image
                 className="cup-image"
-                src={finalImage.url}
+                src={finalImage?.url}
                 alt="image-1"
                 preview={false}
               />
               <div className="text-center text-shadow text-3xl absolute top-0 justify-center w-full text-slate-100">
-                {finalImage.name}
+                {finalImage?.name}
               </div>
             </div>
           ) : (
@@ -213,13 +213,13 @@ const Cup = observer(({ data }) => {
                 <div className={isRightClick ? "hidden" : "block"}>
                   <Image
                     className={`cup-image ${isRightClick ? "hidden" : "block"}`}
-                    src={imageItems[0].url}
+                    src={imageItems[0]?.url}
                     layout="fill"
                     alt="image-1"
                     preview={false}
                   />
                   <div className="text-shadow text-3xl absolute top-0 justify-center w-full text-slate-100">
-                    {imageItems[0].name}
+                    {imageItems[0]?.name}
                   </div>
                 </div>
               </Col>
@@ -235,13 +235,13 @@ const Cup = observer(({ data }) => {
                 <div className={isLeftClick ? "hidden" : "block"}>
                   <Image
                     className="cup-image"
-                    src={imageItems[1].url}
+                    src={imageItems[1]?.url}
                     layout="fill"
                     alt="image-2"
                     preview={false}
                   />
                   <div className="text-shadow text-3xl absolute top-0 justify-center w-full text-slate-100">
-                    {imageItems[1].name}
+                    {imageItems[1]?.name}
                   </div>
                 </div>
               </Col>
