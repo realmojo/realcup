@@ -11,6 +11,7 @@ class MyDocument extends Document {
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
           ></script>
           <script
+            async
             dangerouslySetInnerHTML={{
               __html: `
             window.dataLayer = window.dataLayer || [];
@@ -29,10 +30,12 @@ class MyDocument extends Document {
                 src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9130836798889522"
               ></script>
               <script
+                async
                 type="text/javascript"
                 src="//wcs.naver.net/wcslog.js"
               ></script>
               <script
+                async
                 type="text/javascript"
                 dangerouslySetInnerHTML={{
                   __html: `if(!wcs_add) var wcs_add = {};
