@@ -4,6 +4,7 @@ import {
   SignalFilled,
   PlayCircleFilled,
   EditOutlined,
+  FileImageTwoTone,
 } from "@ant-design/icons";
 import { useRouter } from "next/router";
 const { Text } = Typography;
@@ -80,15 +81,18 @@ export const CupComponent = ({
               </Col>
             </>
           ) : (
-            <Col span={24}>
+            <Col span={24} style={{ borderBottom: "1px solid #f1f1f1" }}>
               <div
                 className="card-cup-image"
                 style={{
-                  width: 130,
-                  height: 130,
-                  backgroundImage: `url("https://realcup.s3.ap-northeast-2.amazonaws.com/upload.png")`,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  fontSize: 80,
                 }}
-              ></div>
+              >
+                <FileImageTwoTone />
+              </div>
             </Col>
           )}
         </Row>
