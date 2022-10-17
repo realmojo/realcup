@@ -48,16 +48,18 @@ const Result = ({ data }) => {
     document.body.removeChild(textarea);
   };
 
-  const doAddComment = async () => {
-    const params = {
-      _cupId: item._id,
-      comment: comment,
-      nickname: `익명의 ${shortId.generate()}`,
-      winnerName: resultItem.name,
-    };
-    const data = await addComment(params);
-    setCommentItems([data, ...commentItems]);
-    setComment("");
+  const doAddComment = async (e) => {
+    if (e.keyCode === 13) {
+      const params = {
+        _cupId: item._id,
+        comment: comment,
+        nickname: `익명의 ${shortId.generate()}`,
+        winnerName: resultItem.name,
+      };
+      const data = await addComment(params);
+      setCommentItems([data, ...commentItems]);
+      setComment("");
+    }
   };
 
   const onLoadMore = async () => {
@@ -169,7 +171,7 @@ const Result = ({ data }) => {
                     style={{ width: "calc(100% - 200px)" }}
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
-                    onPressEnter={() => doAddComment()}
+                    onKeyUp={(e) => doAddComment(e)}
                   />
                   <Button type="primary" onClick={() => doAddComment()}>
                     남기기
