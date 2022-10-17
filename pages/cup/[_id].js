@@ -168,7 +168,7 @@ const Cup = observer(({ data }) => {
         </div>
       </Modal>
       <Layout>
-        <Adsense ad-slot="9253247567" />
+        <Adsense slotId="9253247567" />
         <Content className="board-bg-color">
           <div className="text-center pt-4">
             <Title className="text-slate-400">
@@ -230,7 +230,7 @@ const Cup = observer(({ data }) => {
               >
                 <div className={isLeftClick ? "hidden" : "block"}>
                   <Image
-                    className={`cup-image`}
+                    className="cup-image"
                     src={imageItems[1].url}
                     layout="fill"
                     alt="image-2"

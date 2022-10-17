@@ -24,7 +24,7 @@ export const Adsense = ({ slotId, adFormat = "auto" }) => {
             data-ad-slot={slotId}
             data-ad-format={adFormat}
             data-full-width-responsive="true"
-          ></ins>
+          />
         </div>
       ) : (
         <div style={{ width: "100%", height: 100, backgroundColor: "gray" }}>
