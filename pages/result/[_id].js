@@ -113,7 +113,15 @@ const Result = ({ data }) => {
       <Layout>
         <Content>
           <Row>
-            <Col span={12} className="px-4 py-4 text-center">
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 24 }}
+              lg={{ span: 12 }}
+              xl={{ span: 12 }}
+              xxl={{ span: 12 }}
+              className="px-4 py-4 text-center"
+            >
               <Image
                 className="cup-image"
                 src={resultItem.url}
@@ -121,7 +129,15 @@ const Result = ({ data }) => {
                 preview={false}
               />
             </Col>
-            <Col span={12} className="px-4 py-4">
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 24 }}
+              lg={{ span: 12 }}
+              xl={{ span: 12 }}
+              xxl={{ span: 12 }}
+              className="px-4 py-4"
+            >
               <div className="text-3xl mb-4">
                 <Text className="font-bold">{resultItem.name}</Text>는{" "}
                 <Text className="font-bold text-blue-500">
@@ -168,7 +184,7 @@ const Result = ({ data }) => {
                 <Text className="text-slate-500">한줄평 남기기</Text>
                 <Input.Group compact>
                   <Input
-                    style={{ width: "calc(100% - 200px)" }}
+                    style={{ width: "calc(100% - 70px)" }}
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     onKeyUp={(e) => doAddComment(e)}
