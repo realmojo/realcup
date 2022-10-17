@@ -127,7 +127,12 @@ const Result = ({ data }) => {
                 </Text>
                 회 우승하였습니다.
               </div>
-              <Adsense slotId="1318917221" style={{ display: "block" }} />
+              <Adsense
+                slotId="1318917221"
+                style={{ display: "block" }}
+                adFormat="auto"
+                isResponsive={true}
+              />
               <div className="mt-4">
                 <Button
                   className="mr-2"

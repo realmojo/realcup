@@ -171,6 +171,7 @@ const Cup = observer(({ data }) => {
         <Adsense
           style={{ display: "inline-block", width: 728, height: 90 }}
           slotId="9253247567"
+          isResponsive={false}
         />
         <Content className="board-bg-color">
           <div className="text-center pt-4">
