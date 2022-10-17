@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "start:local": "next start",
     "stop": "pm2 stop realcup-web && pm2 delete realcup-web",
     "start": "pm2 start yarn --name \"realcup-web\" -- start",
     "lint": "next lint"
