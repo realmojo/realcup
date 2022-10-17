@@ -171,7 +171,7 @@ const Cup = observer(({ data }) => {
         <Adsense ad-slot="9253247567" />
         <Content className="board-bg-color">
           <div className="text-center pt-4">
-            <Title style={{ color: "rgb(241 245 249" }}>
+            <Title style={{ color: "#f1f5f9" }}>
               {item.title}{" "}
               {isGameClear
                 ? "우승"
