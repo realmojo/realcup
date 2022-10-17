@@ -49,7 +49,7 @@ const Result = ({ data }) => {
   };
 
   const doAddComment = async (e) => {
-    if (e.keyCode === 13) {
+    if (e.keyCode === 13 && comment) {
       const params = {
         _cupId: item._id,
         comment: comment,
