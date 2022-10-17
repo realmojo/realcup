@@ -28,6 +28,9 @@ export const HeaderComponent = observer(() => {
       router.push("/login");
     }
   };
+  const doLogin = () => {
+    router.push("/login");
+  };
   const goHome = () => {
     router.push("/");
   };
@@ -57,21 +60,19 @@ export const HeaderComponent = observer(() => {
         </div>
       }
       extra={[
-        <Button key="my" onClick={doMyCup}>
+        <Button key="my" onClick={() => doMyCup()}>
           내 월드컵
         </Button>,
-        <Button key="create" onClick={doCreate}>
+        <Button key="create" onClick={() => doCreate()}>
           월드컵 만들기
         </Button>,
         storeLogin.isLogin ? (
-          <Button key="logout" onClick={doLogout}>
+          <Button key="logout" onClick={() => doLogout()}>
             로그아웃
           </Button>
         ) : (
-          <Button key="login">
-            <Link href="/login">
-              <a>로그인</a>
-            </Link>
+          <Button key="login" onClick={() => doLogin()}>
+            로그인
           </Button>
         ),
       ]}
