@@ -18,13 +18,13 @@ export const Adsense = ({ slotId, adFormat = "auto" }) => {
       {isProduction ? (
         <div style={{ width: "100%", height: 100 }}>
           <ins
-            class="adsbygoogle"
-            style="display:block"
+            className="adsbygoogle"
+            style={{ display: "block" }}
             data-ad-client="ca-pub-9130836798889522"
             data-ad-slot={slotId}
             data-ad-format={adFormat}
             data-full-width-responsive="true"
-          />
+          ></ins>
         </div>
       ) : (
         <div style={{ width: "100%", height: 100, backgroundColor: "gray" }}>
