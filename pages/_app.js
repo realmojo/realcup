@@ -6,7 +6,7 @@ import "../styles/create.css";
 import "../styles/board.css";
 import { storeLogin } from "../stores/login";
 import NextNProgress from "nextjs-progressbar";
-import { Head } from "next/document";
+import Head from "next/head";
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
