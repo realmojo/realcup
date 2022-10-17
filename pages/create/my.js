@@ -16,19 +16,20 @@ const My = () => {
       <HeaderComponent />
       <div className="create-container">
         <Row gutter={[10, 10]}>
-          {items.map((item) => (
-            <Col key={item._id} span={8}>
-              <CupComponent
-                _id={item._id}
-                urls={item.images}
-                title={item.title}
-                description={item.description}
-                isPreview={false}
-                status={item.status}
-                isEdit={true}
-              />
-            </Col>
-          ))}
+          {items.length > 0 &&
+            items.map((item) => (
+              <Col key={item._id} span={8}>
+                <CupComponent
+                  _id={item._id}
+                  urls={item.images}
+                  title={item.title}
+                  description={item.description}
+                  isPreview={false}
+                  status={item.status}
+                  isEdit={true}
+                />
+              </Col>
+            ))}
         </Row>
       </div>
     </>
