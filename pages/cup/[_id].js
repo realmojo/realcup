@@ -168,7 +168,10 @@ const Cup = observer(({ data }) => {
         </div>
       </Modal>
       <Layout>
-        <Adsense slotId="9253247567" height={90} />
+        <Adsense
+          style={{ display: "inline-block", width: 728, height: 90 }}
+          slotId="9253247567"
+        />
         <Content className="board-bg-color">
           <div className="text-center pt-4">
             <Title style={{ color: "rgb(226, 232, 240)" }}>

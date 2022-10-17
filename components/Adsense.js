@@ -1,14 +1,14 @@
 import React from "react";
 import AdSense from "react-adsense";
 
-export const Adsense = ({ slotId, adFormat = "auto", height = 280 }) => {
+export const Adsense = ({ slotId, adFormat = "auto", style }) => {
   const isProduction = process.env.NODE_ENV === "production" ? true : false;
   return (
     <>
       {isProduction ? (
-        <div style={{ width: "100%", height }}>
+        <div className="text-center">
           <AdSense.Google
-            style={{ display: "block", height }}
+            style={style}
             client="ca-pub-9130836798889522"
             slot={slotId}
             format={adFormat}
