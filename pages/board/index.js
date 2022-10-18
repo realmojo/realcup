@@ -1,14 +1,15 @@
 import React from "react";
-import { Layout, Row, Col } from "antd";
+import { Layout, Row, Col, Button } from "antd";
 const { Content } = Layout;
 import {
   CupComponent,
+  CupList,
   HeaderComponent,
   SidebarComponent,
 } from "../../components";
 import { getCupList } from "../../api/cup";
 import Head from "next/head";
-const Board = ({ items }) => {
+const Board = ({ items, category }) => {
   return (
     <>
       <Head>
@@ -18,36 +19,7 @@ const Board = ({ items }) => {
       <Layout>
         <SidebarComponent />
         <Layout className="site-layout">
-          <Content
-            className="site-layout-background"
-            style={{
-              margin: "24px 16px",
-              padding: 24,
-              minHeight: 280,
-            }}
-          >
-            <Row gutter={[16, 16]}>
-              {items.map((item) => (
-                <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 24 }}
-                  md={{ span: 12 }}
-                  lg={{ span: 8 }}
-                  xl={{ span: 8 }}
-                  xxl={{ span: 6 }}
-                  key={item._id}
-                >
-                  <CupComponent
-                    _id={item._id}
-                    urls={item.images}
-                    title={item.title}
-                    description={item.description}
-                    isPreview={false}
-                  />
-                </Col>
-              ))}
-            </Row>
-          </Content>
+          <CupList items={items} category={category} />
         </Layout>
       </Layout>
     </>
