@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://realcup.co.kr/sitemap.xml
