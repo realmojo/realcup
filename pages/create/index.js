@@ -190,8 +190,8 @@ const Create = ({ _id, data }) => {
         setCupId(data._id);
       }
     } else if (current === 1) {
-      if (urls.length < 8) {
-        return message.error("8개 이상의 이미지를 올려주세요");
+      if (urls.length < 4) {
+        return message.error("4개 이상의 이미지를 올려주세요");
       }
       const params = {
         _id: cupId,
