@@ -38,7 +38,7 @@ const Result = ({ data }) => {
   const copy = () => {
     message.success("링크가 복사되었습니다");
     var textarea = document.createElement("textarea");
-    textarea.value = `https://realcup.co.kr/cup/${item._id}`;
+    textarea.value = `https://realcup.co.kr/cup/${item._id}/${item.title}`;
 
     document.body.appendChild(textarea);
     textarea.select();
@@ -156,7 +156,11 @@ const Result = ({ data }) => {
                   className="mr-2"
                   size="large"
                   danger
-                  onClick={() => router.push(`/cup/${item._id}`)}
+                  onClick={() =>
+                    router.push(
+                      `/cup/${item.title.replace(/ /g, "-")}/${item._id}`
+                    )
+                  }
                 >
                   리플레이
                 </Button>

@@ -46,7 +46,7 @@ export const CupComponent = ({
 
   const doPlay = () => {
     if (!isPreview) {
-      router.push(`/cup/${_id}`);
+      router.push(`/cup/${title.replace(/ /g, "-")}/${_id}`);
     }
   };
 

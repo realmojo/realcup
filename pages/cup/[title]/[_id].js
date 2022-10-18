@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import { Image, Col, Modal, Row, Select, Typography, Layout } from "antd";
-import { getCup } from "../../api/cup";
-import { storeCup } from "../../stores/cup";
+import { getCup } from "../../../api/cup";
+import { storeCup } from "../../../stores/cup";
 import { useRouter } from "next/router";
 import { observer } from "mobx-react";
-import { Adsense } from "../../components/Adsense";
+import { Adsense } from "../../../components/Adsense";
 const { Option } = Select;
 const { Text, Title } = Typography;
 const { Content } = Layout;
@@ -18,7 +18,7 @@ const ARROW = {
 const getRound = (len) => {
   const rounds = [];
   let n = 4;
-  while (n < len) {
+  while (n <= len) {
     rounds.push(n);
     n *= 2;
   }
