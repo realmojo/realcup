@@ -6,9 +6,11 @@ import { CupComponent, HeaderComponent } from "../../components";
 const My = () => {
   const [items, setItems] = useState([]);
   useEffect(() => {
-    (async () => {
-      const data = await getMyCupList();
-      setItems(data);
+    (() => {
+      setTimeout(async () => {
+        const data = await getMyCupList();
+        setItems(data);
+      }, 100);
     })();
   }, []);
   return (

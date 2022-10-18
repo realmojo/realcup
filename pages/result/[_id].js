@@ -38,7 +38,10 @@ const Result = ({ data }) => {
   const copy = () => {
     message.success("링크가 복사되었습니다");
     var textarea = document.createElement("textarea");
-    textarea.value = `https://realcup.co.kr/cup/${item._id}/${item.title}`;
+    textarea.value = `https://realcup.co.kr/cup/${item.title.replace(
+      / /g,
+      "-"
+    )}/${item._id}`;
 
     document.body.appendChild(textarea);
     textarea.select();
