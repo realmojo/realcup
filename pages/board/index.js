@@ -30,7 +30,7 @@ export async function getServerSideProps(context) {
   const { category } = context.query;
   const data = await getCupList(category);
   return {
-    props: { items: data }, // will be passed to the page component as props
+    props: { items: data, category }, // will be passed to the page component as props
   };
 }
 

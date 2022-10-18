@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Layout, Row, Col, Button, message } from "antd";
 const { Content } = Layout;
 import { CupComponent } from "./CupComponent";
@@ -8,7 +8,6 @@ import { getCupList } from "../api/cup";
 export const CupList = ({ items, category }) => {
   const [page, setPage] = useState(1);
   const [cupItems, setCupItems] = useState(items);
-
   const doMore = async () => {
     const data = await getCupList(category, page + 1);
     if (data.length === 0) {
@@ -18,6 +17,9 @@ export const CupList = ({ items, category }) => {
       setPage(page + 1);
     }
   };
+  useEffect(() => {
+    setCupItems(items);
+  }, [category]);
   return (
     <Content
       className="site-layout-background"
