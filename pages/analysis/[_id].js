@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import { Layout, Row, Col, Image, Typography, message, Table } from "antd";
+import React, { useState, useEffect } from "react";
+import { Layout, Image, Typography, Table } from "antd";
 
 import { HeaderComponent } from "../../components";
 import Head from "next/head";
 import { getCup } from "../../api/cup";
-import { useRouter } from "next/router";
+import { debounce } from "lodash";
 import { Adsense } from "../../components/Adsense";
+import { storeCommon } from "../../stores/common";
+import { observer } from "mobx-react";
 const { Title, Text } = Typography;
 const { Content } = Layout;
 
@@ -28,39 +30,42 @@ const columns = [
     title: "이름",
     dataIndex: "name",
     key: "name",
-    responsive: ["md"],
   },
   {
     title: "우승횟수",
     dataIndex: "winnerCount",
     key: "winnerCount",
-    responsive: ["lg"],
   },
   {
     title: "승률",
     dataIndex: "winnerRate",
     key: "winnerRate",
-    responsive: ["lg"],
   },
 ];
-const Analysis = ({ data }) => {
-  const router = useRouter();
-  const [item, setItem] = useState(data);
+const Analysis = observer(({ data }) => {
+  const [item, _] = useState(data);
 
-  const copy = () => {
-    message.success("링크가 복사되었습니다");
-    var textarea = document.createElement("textarea");
-    textarea.value = `https://realcup.co.kr/cup/${item.title.replace(
-      / /g,
-      "-"
-    )}/${item._id}`;
-    document.body.appendChild(textarea);
-    textarea.select();
-    textarea.setSelectionRange(0, 9999); // 추가
+  const handleResize = debounce(() => {
+    if (typeof window !== undefined) {
+      console.log(window.innerWidth);
+      console.log(storeCommon.isMobile);
+      if (window.innerWidth < 580) {
+        storeCommon.setIsMobile(true);
+      } else {
+        storeCommon.setIsMobile(false);
+      }
+    }
+  }, 100);
 
-    document.execCommand("copy");
-    document.body.removeChild(textarea);
-  };
+  useEffect(() => {
+    if (window.innerWidth < 580) {
+      storeCommon.setIsMobile(true);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <>
@@ -69,35 +74,27 @@ const Analysis = ({ data }) => {
       </Head>
       <HeaderComponent />
       <Layout>
-        <Content>
-          <Row>
-            <Col
-              offset={6}
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 24 }}
-              lg={{ span: 24 }}
-              xl={{ span: 12 }}
-              xxl={{ span: 12 }}
-              className="px-4 py-4 text-center"
-            >
-              <Title level={2}>
-                <Text className="text-blue-400">{item.title}</Text> 통계 페이지
-              </Title>
-              <Adsense
-                slotId="2865338157"
-                style={{ display: "block" }}
-                adFormat="auto"
-                isResponsive={true}
-              />
-              <Table columns={columns} dataSource={item.images} key="1" />
-            </Col>
-          </Row>
+        <Content
+          style={{
+            width: storeCommon.isMobile ? "100%" : "600px",
+            margin: storeCommon.isMobile ? "0" : "0 auto !important",
+          }}
+        >
+          <Title level={2} className="text-center mt-4">
+            <Text className="text-blue-400">{item.title}</Text> 통계 페이지
+          </Title>
+          <Adsense
+            slotId="2865338157"
+            style={{ display: "block" }}
+            adFormat="auto"
+            isResponsive={true}
+          />
+          <Table columns={columns} dataSource={item.images} key="1" />
         </Content>
       </Layout>
     </>
   );
-};
+});
 
 export async function getServerSideProps(context) {
   const { _id } = context.params;
