@@ -51,6 +51,20 @@ const Result = ({ data }) => {
     document.body.removeChild(textarea);
   };
 
+  const doAddCommentButton = async () => {
+    if (comment) {
+      const params = {
+        _cupId: item._id,
+        comment: comment,
+        nickname: `익명의 ${shortId.generate()}`,
+        winnerName: resultItem.name,
+      };
+      const data = await addComment(params);
+      setCommentItems([data, ...commentItems]);
+      setComment("");
+    }
+  };
+
   const doAddComment = async (e) => {
     if (e.keyCode === 13 && comment) {
       const params = {
@@ -196,7 +210,7 @@ const Result = ({ data }) => {
                     onChange={(e) => setComment(e.target.value)}
                     onKeyUp={(e) => doAddComment(e)}
                   />
-                  <Button type="primary" onClick={() => doAddComment()}>
+                  <Button type="primary" onClick={() => doAddCommentButton()}>
                     남기기
                   </Button>
                 </Input.Group>
