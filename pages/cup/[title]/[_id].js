@@ -147,7 +147,6 @@ const Cup = observer(({ data }) => {
             ></div>
           </Col>
         </Row>
-
         <Select
           className="w-full"
           defaultValue="4"
@@ -166,6 +165,12 @@ const Cup = observer(({ data }) => {
             시작합니다.
           </Text>
         </div>
+        <Adsense
+          slotId="2837789120"
+          style={{ display: "block" }}
+          adFormat="auto"
+          isResponsive={true}
+        />
       </Modal>
       <Layout>
         <Adsense
