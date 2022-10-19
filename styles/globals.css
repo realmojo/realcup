@@ -58,3 +58,12 @@
 .site-layout .site-layout-background {
   background: #fff;
 }
+
+.analysis-web {
+  width: 600px;
+  margin: 0 auto !important;
+}
+.analysis-mobile {
+  width: 100%;
+  margin: 0;
+}

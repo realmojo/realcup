@@ -75,10 +75,9 @@ const Analysis = observer(({ data }) => {
       <HeaderComponent />
       <Layout>
         <Content
-          style={{
-            width: storeCommon.isMobile ? "100%" : "600px",
-            margin: storeCommon.isMobile ? "0" : "0 auto !important",
-          }}
+          className={`${
+            storeCommon.isMobile ? "analysis-mobile" : "analysis-web"
+          }`}
         >
           <Title level={2} className="text-center mt-4">
             <Text className="text-blue-400">{item.title}</Text> 통계 페이지
