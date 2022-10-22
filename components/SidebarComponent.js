@@ -44,6 +44,10 @@ const items = [
 export const SidebarComponent = observer(() => {
   const router = useRouter();
   const onClick = (e) => {
+    if (window.innerWidth < 1200) {
+      storeCommon.setIsSidebarOpen(true);
+      storeCommon.setIsMenuOpen(false);
+    }
     router.push(`/board?category=${e.key}`);
   };
 
@@ -71,6 +75,7 @@ export const SidebarComponent = observer(() => {
     <Sider
       trigger={null}
       collapsible
+      // collapsed={storeCommon.isSidebarOpen && !storeCommon.isMenuOpen}
       collapsed={storeCommon.isSidebarOpen && !storeCommon.isMenuOpen}
       style={{ flex: "none" }}
       className={

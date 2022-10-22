@@ -1,12 +1,6 @@
 import React from "react";
-import { Layout, Row, Col, Button } from "antd";
-const { Content } = Layout;
-import {
-  CupComponent,
-  CupList,
-  HeaderComponent,
-  SidebarComponent,
-} from "../../components";
+import { Layout } from "antd";
+import { CupList, HeaderComponent, SidebarComponent } from "../../components";
 import { getCupList } from "../../api/cup";
 import Head from "next/head";
 const Board = ({ items, category }) => {
